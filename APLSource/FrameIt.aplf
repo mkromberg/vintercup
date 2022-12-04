@@ -1,0 +1,59 @@
+ HTML←{options}FrameIt body;z;t;i;head;lhs;table;foot;panel;back;pics;sub
+⍝ Put the Main Application output into context
+
+⍝ Add Header
+
+ :If 0=⎕NC'options' ⋄ options←,⊂'Refresh' 60 ⋄ :EndIf
+ panel←'bgcolor= "#99CCCC"' ⋄ back←'bgcolor="#CC99CC"' ⍝ Turquoise, Purple
+ head←'<head>'
+ head,←'<!-- SOFIA Server Version 0.3 -->'
+ head,←'<title>SOFIA Server Monitor</title><br>'
+⍝ head,←'<meta http-equiv="Expires" content="Mon, 01 Jan 1990 00:00:01 GMT">' ⍝ Always reload
+ :If 0≠z←options #.WEB.LookUp'Refresh'
+     head,←'<meta http-equiv="Refresh" content="',(⍕z),'; url=">'                      ⍝ And refresh every 60 secs
+ :EndIf
+ head,←'</head>'
+
+⍝ Left hand Frame
+ lhs←'<td width=15% style="padding: 5" ',panel,' valign=top><font face=Arial,Helvetica size=2><nobr>'
+ lhs,←'<a href="SRM.RUN?"><img border=0 src="sofia.gif" alt="Home"></a><br><br>'
+ lhs,←'<Font color=Blue size=3><b>Server Monitor<br>',(2⊃#.SRV.System),'<br></b></font><br>'
+
+ pics←'flash50.gif' 'bluetick50.gif' 'warning50.gif' ⍝ Down, Up, Starting/Error
+ lhs,←'<Font color=Blue size=2><b>Services<br></b>'
+ z←#.MASTER.SERVICES[;2] ⍝ Service Names
+ sub←((⊂'&Subpage='),¨'Users' 'Semafores' 'Performance' 'Schedule' '')['MAS' 'SEM' 'MFS' 'BAC'⍳3↑¨z]
+ z←(⊂'<a href="SRM.RUN?Page=Service&Service='),¨z,¨sub,¨(⊂'">'),¨z,¨⊂'</a><br>'
+ :If 0≠⍴i←(1≠t←#.MASTER.SERVICES[;3])/⍳⍴z
+     z[i]←((⊂'<img border=0 src="'),¨(pics[3⌊t[i]+1]),¨⊂'"> '),¨z[i]
+ :EndIf
+
+ lhs,←⊃,/(⊂'&nbsp&nbsp'),¨z
+ lhs,←'</font><br>'
+
+ lhs,←'<Font color=Blue size=2><b>Other Pages<br></b>'
+ lhs,←'&nbsp&nbsp<a href="SRM.RUN?page=Commands">Commands</a><br>'
+⍝ lhs,←'&nbsp&nbsp<a href="SRM.RUN?page=Errors">Error Log</a><br>'
+ lhs,←'</font><br>'
+
+ lhs,←'</nobr></font></td>'
+
+ t←'<td style="padding: 0 2 5 2" valign=top>'
+ body←t,body,'</font></td>'
+
+ foot←'<div style="font-size: 9pt">SOFIA Server Monitor version 0.4 at ',(tsfmt ⎕TS)
+ foot,←' for Server ',(2⊃#.SRV.System),'@',#.SRV.Master,'</div>'
+ :If ~0∊⍴QUOTES
+     foot,←'<div style="text-align: right; font-style: italic; font-size: 8pt">'
+     foot,←,{(⊃⍵),'<br>',2⊃⍵},QUOTES[?⊃⍴QUOTES;]
+     foot,←'</div>'
+ :EndIf
+
+ foot←'<tr><td style="padding: 4; border:1px solid black" colspan=2>',foot,'</td></tr>'
+
+ table←'<font face=Arial,Helvetica><table style="margin: 0" cellspacing=0 width=100% border=0>'
+ table,←'<tr>',lhs,body,'</tr>',foot,'</table></font>'
+
+ HTML←'<html>',head,'<body topmargin=2 leftmargin=2 marginheight=2 marginwidth=2 ',back,'>',table
+ HTML,←'</body></html>'
+⍝∘ (c)APLIT S SRM ras 18/02/2001 17:45                28300 D95

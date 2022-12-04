@@ -1,0 +1,10 @@
+ r←data PutFile name;tn
+⍝ Return contents of a file
+ :Trap 0
+     tn←name ⎕NCREATE 0
+ :Else
+     tn←name ⎕NTIE 0
+ :EndTrap
+ 0 ⎕NRESIZE tn
+ data ⎕NAPPEND tn,80
+ ⎕NUNTIE tn

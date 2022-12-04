@@ -1,0 +1,4 @@
+ TN←title MTBNewPage name
+
+ TN←(FilePath,FilePrefix,name)⎕NCREATE 0
+ ('<title>',title,'</title>',CR)⎕NAPPEND TN

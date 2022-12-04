@@ -1,0 +1,99 @@
+ result←MTBMain;TN;antal;a;A;n;i;j;p;min;q;qq;m;ryttere;last;ix;z
+ ⍝ Return individual results
+
+ TN←EventTitle MTBNewPage'main.htm'
+
+ wr'<h2><br><a target="_blank" href="http://www.vega-cykler.dk"><img src="logo.jpg"></img></a>'
+ :If (A←⍴Resultater)<ANTALAFD
+     wr' Vinter Cup - resultater efter ',(⍕A),' afdeling',((1≠A)/'er'),'</h2>'
+ :Else
+     wr' Vinter Cup - endeligt resultat</h2>'
+ :EndIf
+
+ wr'<p>Klik <a href="',EventRules,'"><b>her</b></a> for en oversigt over vintercuppen; afdelingerne, points-system m.m.<br>'
+
+ :If A≠⍴Afdelinger ⋄ wr'<p><b>Husk afdeling ',((A+1)⊃Afdelinger),'!</b></p>' ⋄ :EndIf
+
+⍝ --------- Klub-konkurrencen --------
+ wr'<h2>Klub-konkurrencen</h2>'
+ wr'<p>Klik på overskrifterne over afdelings-kolonnerne for at se detaljerede resultater for hver enkelt afdeling.<br>'
+ wr'Klik på et klubnavn for at se en oversigt over resultaterne for rytterne fra hver enkelt klub.</p>'
+ z←~Klubber[;1]∊⊂'Gæster'
+ z←(z⌿MTBKlubber,Klubvis)[⍋z/Klubvis[;1];]
+ a←⍕¨⍳A ⍝ Afdelinger
+ a←{'<a href="',FilePrefix,'afd',⍵,'.htm#Klubvis">Afd.<br>',⍵,'</a>'}¨a
+ wr'<p>'
+ wr'CENTER'HTMLTable''('' '<br>Klub' 'Points<br>i alt',a)(((⍕¨z[;2]⍳z[;2]),¨'.'),⍕¨z)
+ wr'</p>'
+
+⍝ ------- Individuelle Stilling ------
+ wr'<h2>Individuel stilling</h2>'
+ :If 3≤⍴Resultater
+     wr'<p><b>NYT:</b> Det dårligste resultat for hver rytter vises i parantes - og er ikke medtaget i de individuelle og gruppe-inddelte resultater.</p>'
+ :EndIf
+ wr'<p>Klik på overskrifterne over afdelings-kolonnerne for at se detaljerede resultater for hver enkelt afdeling. '
+ wr'Klik på rytternavne for at se hvordan rytteren har klaret sig i hver enkelt afdeling. '
+ wr'Klik på en klasse for at se <a href="',FilePrefix,'klasser.htm">klasse-inddelte resultater</a>.<br>'
+
+ :If 0≠⍴⊃,/Helpers
+     wr'<br>N.B. Hjælpere er vist med <font color="#00CF00"><b>GRØNT</b></font>, og bliver tildelt samme antal points som i omgangen EFTER den, hvor de var hjælpere. Indtil denne afdeling er kørt, står de noteret med point fra omgangen INDEN.<br>'
+ :EndIf
+
+ :If 0∧MINIMUM<⍴Resultater
+     :If (⍴Afdelinger)=⍴Resultater
+         wr'<br>N.B. Ryttere med <font color="#FF0000"><b>RØDE</b></font> numre var ikke til stede ved sidste afdeling, og kan derfor ikke vinde en præmie.<br>'
+     :Else
+         wr'<br>N.B. Ryttere med <font color="#FF0000"><b>RØDE</b></font> numre har (endnu) ikke kørt de ',(⍕MINIMUM),' afdelinger, der i følge reglerne skal til for at man kan vinde en præmie.<br>'
+     :EndIf
+ :EndIf
+
+ wr'</p>'
+
+ z←MTBRyttere,0,Individuelt,Individuelt[;1]
+ z←z[q←⍋Individuelt[;1];]
+ min←{(↓⍵)⍳¨⌈/⍵}0 1↓Individuelt ⍝ Location of highest score
+ min←min[q]
+ last←,Individuelt[q;1+⍴Resultater]
+ last←((⍴Resultater)≠⍴Afdelinger)∨last<⌈/last ⍝ Til stede ved sidste afdeling eller lige meget?
+ ryttere←Ryttere[q;1]
+ antal←(0 1↓Individuelt[q;])+.≠0
+ n←⌈\(1,(1↓n)≠¯1↓n←z[;6])×⍳⊃⍴z
+
+ :For i :In ⍳≢KlasseNavne ⍝ Klasse Ranking
+     j←(z[;4]∊KlasseNavne[i])/⍳1↑⍴z
+     ix←Ryttere[;1]⍳z[j;1]
+     j←j[⍋Klassevis[ix;1]]
+     p←⌈\(⍳⍴j)×1,(1↓p)≠¯1↓p←Klassevis[ix;1] ⍝ Class Rank
+     z[j;5]←p ⍝ Class rank
+ :EndFor
+
+ z[;4]←{'<a href="',FilePrefix,'klasser.htm#Klasse',(⍕⍵),'">',⍵,'</a>'}¨z[;4]
+
+ a←⍕¨⍳A ⍝ Afdelinger
+ a←{'<a href="',FilePrefix,'afd',⍵,'.htm#Individuelt">Afd.<br>',⍵,'</a>'}¨a
+ q←⍕¨z
+
+ q[i]←{'(',(⍕⍵),')'}¨q[i←(⍳⊃⍴z),¨min+2+¯1↑⍴MTBRyttere]
+ result←n,q
+
+ qq←q
+ qq[i;3]←KlubSideLink⍨¨qq[i←(qq[;3]∊Klubber[;1])/⍳≢qq;3]
+
+ :If 0∧m←1∨MINIMUM<⍴Resultater
+     i←(~last)/⍳⍴antal
+     qq[i;1]←{'<font color="#FF0000"><b>',(⍕⍵),'</b></font>'}¨qq[i;1]
+ :Else
+     m←6≠⍳¯1↑⍴qq ⍝ Cols to display
+ :EndIf
+
+ :For i :In ⍳⍴Helpers
+     :If 0≠⍴j←ryttere∩i⊃Helpers
+         j←ryttere⍳j
+         qq[j;6+i]←{'<font color="#00CF00"><b>',(⍕⍵),'</b></font>'}¨qq[j;6+i] ⍝ Green
+     :EndIf
+ :EndFor
+
+ wr'<p>'
+ wr'LEFT'HTMLTable(⍕¨n)(m/'<br>StartNr' '<br>Navn' '<br>Klub' '<br>Klasse' 'Klasse<br>Ranking'('Points for<br>',(⍕(3⌊⍴Resultater)⌈¯1+⍴Resultater),' af ',(⍕⍴Resultater),' afd.'),a,⊂'Points<br>i alt')(m/qq)
+ wr'</p>'
+ ⎕NUNTIE TN

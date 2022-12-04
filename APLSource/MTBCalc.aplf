@@ -1,0 +1,63 @@
+ MTBCalc;i;j;h;t;p;r;o;z;k;g;p;omgange;n;non;min;m;ix
+⍝ Perform calculations, create variables: Klubvis, Individuelt
+
+ Klassevis←Individuelt←((⊃⍴Ryttere),⍴Resultater)⍴0 ⍝ One row per rider
+ Klubvis←((1↑⍴Klubber),⍴Resultater)⍴0    ⍝ One row per club
+
+ :For i :In ⍳⍴Resultater          ⍝ For each afdeling
+     t←MTBCalcAfd i               ⍝ Nr, Køretid, Måltid?
+     r←1↓t[;t[1;]⍳⊂'Nr']
+     :If ∨/~r∊Ryttere[;1] ⋄ ∘ ⋄ :EndIf ⍝ Ryttere mangler
+     r←Ryttere[;1]⍳r              ⍝ Rytter Index
+
+     ⍝ --- Individuelle Points ---
+     :If 0∧3<⊃omgange←1↓t[;t[1;]⍳⊂'Omgange']
+         o←⍋1↓t[;t[1;]⍳⊂'Måltid'] ⍝ If more than 3 laps, sort by time across the line
+     :ElseIf 0
+         o←⍒0=(⌈/omgange)-omgange+7=Ryttere[r;4] ⍝ Sort those who completed to front, else use list order
+     :Else
+         o←⍳¯1+1↑⍴t ⍝ From 2006 we just use the order
+     :EndIf
+     p←⍳⍴r
+
+     Individuelt[;i]←non←2+⍴r ⍝ 2+last for non-participants
+     Individuelt[r[o];i]←p    ⍝ Insert individual points for participants
+
+     ⍝ --- Klassevis indeling ---
+
+     :For k :In KlasseNavne
+         j←(Ryttere[r;4]∊⊂k)/r[o]                         ⍝ Participants in this stage
+         Klassevis[(Ryttere[;4]∊⊂k)/⍳1↑⍴Klassevis;i]←2+⍴j ⍝ Non-participants get this
+         Klassevis[j;i]←⍋⍋Klassevis[j;i]                  ⍝ Klasse ranking
+     :EndFor
+ :EndFor
+
+ ⍝ -------- Correct "Helpers" --------
+ :For i :In ⌽⍳⍴Helpers
+     :If 0≠⍴j←Ryttere[;1]⍳(i⊃Helpers)∩Ryttere[;1]                 ⍝ Helpers in this dept (who did any riding at all)
+         ⍝ Individuelt[j;i]⌊←Individuelt[j;1⌈i+¯1*i=2⊃⍴Individuelt] ⍝ Copy from next afdeling, or previous if it is the last
+         Individuelt[j;i]←⌊/Individuelt[j;ix←∪1⌈(2⊃⍴Individuelt)⌊i+¯1 0 1] ⍝ Best of previous and next
+         Klassevis[j;i]←⌊/Klassevis[j;ix]     ⍝ Ditto for "Klassevis"
+     :EndIf
+ :EndFor
+
+
+ :For i :In ⍳⍴Resultater ⍝ For each afdeling
+     ⍝ --- Klubkonkurrence (after "Helper" correction) ---
+
+     p←(⍴r)⍴0
+     non←⌈/2+¯1+{≢⍵}⌸KlasseNavne,Ryttere[r;4]
+     :For k :In ⍳≢Klubber                  ⍝ For each club
+         n←((m←Ryttere[;3]∊Klubber[k;1]))/Klassevis[;i] ⍝ Riders in this club
+         n←n[g←⍋n]
+         ⍝⎕←(Klubber[k;1])'afd'(i)
+         ⍝⎕←(5⌊⍴n)↑(m⌿Ryttere)[g;],n
+         Klubvis[k;i]←+/non⌊5↑n,5⍴non    ⍝ 5 best riders
+     :EndFor ⍝ Club
+ :EndFor
+
+ min←(↓Individuelt)⍳¨⌈/Individuelt     ⍝ Totals without worst result Individually
+ Individuelt←(+/Individuelt×(3≥⍴Resultater)∨min∘.≠⍳⍴Resultater),Individuelt
+ min←(↓Klassevis)⍳¨⌈/Klassevis         ⍝ Totals without worst result by Class
+ Klassevis←(+/Klassevis×(3≥⍴Resultater)∨min∘.≠⍳⍴Resultater),Klassevis
+ Klubvis←(+/Klubvis),Klubvis           ⍝ 1st col contains total

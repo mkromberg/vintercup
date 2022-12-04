@@ -1,0 +1,31 @@
+ MTB;wr;CR;TN;HTML;Klubvis;Individuelt;r;i;MINIMUM;ANTALAFD;z;NL;Klassevis
+ ⍝ Generate HTML output with MTB Cup results
+
+ ⎕NUNTIE ⎕NNUMS
+
+ GetData
+ z←Ryttere[i←Ryttere[;1]⍳KlubCorr[;1];3]
+ :If 0≠⍴i
+     Ryttere[i;3]←KlubCorr[;2]
+     'Klub korrektion: ' ⋄ Ryttere[i;],(⊂' Var: '),¨z
+ :EndIf
+
+ MTBCalc   ⍝ Perform calculations, create variables: Klubvis, Individuelt
+ ANTALAFD←⍴Afdelinger ⍝ Antal afdelinger
+ MINIMUM←ANTALAFD-1   ⍝ Minimum antal afdelinger (fra 2011 slettes 1)
+
+ →(ClearPath FilePath)↓0
+
+ wr←{⍵ ⎕NAPPEND TN}
+ CR←⎕AV[4]
+ NL←⎕UCS 13 10
+
+ i←MTBMain                   ⍝ Main page
+⍝ MTBOversigt                ⍝ Rules and regulations
+ r←MTBAfdeling¨⍳⍴Resultater  ⍝ Results of each race
+ i∘MTBKlub¨⍳1+≢Klubber     ⍝ Individual results, by club
+
+ ((-1+⍴Resultater)↓[2]i)MTBKlassevis r ⍝ By Class
+
+ ⎕←3 1⍴'Now run' '' '      MTBCopy'
+ ⎕NUNTIE ⎕NNUMS

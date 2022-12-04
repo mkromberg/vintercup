@@ -1,0 +1,26 @@
+ from FTPUpload to;c;files;file;name;txt;z;pass
+
+ :If 0=≢pass←2 ⎕NQ '.' 'GetEnvironment' 'VC_FTP_PASS'
+     'VC_FTP_PASS not found in environment' ⎕SIGNAL 11
+ :EndIf
+ 
+ to←(0=≢to)/'vc2022/'
+ ⎕←'Login to ftp.mortens.one'
+ c←⎕NEW FtpClient('ftp.mortens.one' 'mortens.one' pass)
+
+ files←⊃0(⎕NINFO⍠1)from,'*.*'
+ ⎕←'Uploading... to ',to
+
+ :For file :In files
+     ⎕←'  ',name←∊1↓⎕NPARTS file
+     txt←⊃⎕NGET file
+     txt←style,NL,'<div id="VCSTYLE">',NL,txt,NL,'</div>',NL
+     txt←FileHead,txt,FileTail
+     txt←⎕UCS'UTF-8'⎕UCS txt
+     :If 0≠⊃z←c.Put(to,name)txt
+         ⎕←'failed: ',⍕z
+         ∘∘∘
+     :EndIf
+ :EndFor
+
+ ⎕←'Upload complete.'

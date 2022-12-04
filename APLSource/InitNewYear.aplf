@@ -1,0 +1,7 @@
+ InitNewYear;n
+⍝ Scrape information off the vintercup page to set variables
+
+ (Afdelinger StartDate)←ReadAfdelinger
+ n←≢Afdelinger
+ Helpers←n⍴¨⊂⍬
+ DagChips←0 3⍴0

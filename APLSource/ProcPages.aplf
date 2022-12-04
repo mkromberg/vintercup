@@ -1,0 +1,81 @@
+ pages←ProcPages pages;i;t;s;hdr;tab;row;r;z;strip;p;sep;m;cc;bd;bdate;age;UK;hdrs;SHORT
+
+ strip←{((⍴⍺)×⍺≡(⍴⍺)↑⍵)↓⍵}
+
+ :For i :In ⍳⍴pages
+     :If '<html '≡6↑t←i⊃pages
+         t←t~⎕UCS 13 10
+         t←t DropTo'<table class="ResRap_table"' ⍝ Drop to the Result Table
+         t←(t⍳'>')↓t
+         tab←t TakeTo'</table>'
+
+         hdr tab←'tr'GetTag tab
+         hdr←tds hdr
+         :If hdr≢(⍴hdr)↑PageHeaders ⋄ ∘ ⋄ :EndIf
+         r←(0,⍴hdr)⍴⊂''
+
+         :While 0≠⍴tab
+             row tab←'tr'GetTag tab
+             :If 0≠⍴row ⋄ r⍪←'&nbsp;'∘strip¨tds row ⋄ :EndIf
+         :EndWhile
+
+         r←(~r∊⊂'&nbsp;')/¨r
+
+     :ElseIf UK←(⍴t)>z←((¯1↓⊃,/¯3↓(hdrs←PageHeaders),¨sep←⊃(100↑t)∩',;')⍷t)⍳1
+     :OrIf (⍴t)>z←((¯1↓⊃,/¯3↓(hdrs←PageHeadersDK),¨sep←⊃(100↑t)∩',;')⍷t)⍳1
+     :OrIf SHORT←(⍴t)>z←((¯1↓⊃,/(hdrs←PageHeaders2),¨sep←⊃(100↑t)∩',;')⍷t)⍳1
+     :OrIf SHORT←(⍴t)>z←((¯1↓⊃,/(hdrs←PageHeadersDK2),¨sep←⊃(100↑t)∩',;')⍷t)⍳1
+
+         :If SHORT
+             hdr←hdrs[10 2 3 5 1 4 6 9 8]
+
+         :Else
+             hdr←hdrs[1 2 2 8 3 5 6 7 4,8+⍳6] ⋄ hdr[3]←⊂''
+          ⍝ hdr←'Plac' 'Navn' '' 'Klub' 'Start nr' 'Kategori' 'Køn' 'Antal omg' 'Sluttid','Omg '∘,¨⍕¨⍳6
+         :EndIf
+         t←(z-1)↓t
+         z←t⍳⎕UCS 10 ⋄ t←z↓t
+         t←{1↓¨(⍵=1⊃⍵)⊂⍵}(⎕UCS 10),t
+         t←{1↓¨(⍵=1⊃⍵)⊂⍵}¨sep,¨t
+         r←↑t
+     :Else
+         ⎕←'Invalid file format for afdeling ',(⍕i),':'
+         ⎕←'Got : ',(100⌊¯1+t⍳⎕UCS 10)↑t
+         ⎕←'Want: ',∊PageHeadersDK2,¨';'
+         ∘∘∘ ⍝ Debug Stop
+     :EndIf
+     r←(r,⊂'')[;((¯1↑⍴r)↑hdrs)⍳hdr]
+
+     :If SHORT
+         r←(~r[;1]∊'' 'DNS')⌿r
+         r←(~(8↑¨r[;2])∊⊂'Vega Dag')⌿r
+         r[;1]←⊃¨2⊃¨⎕VFI¨r[;1]
+         r[;2]←r[;2],¨' ',¨r[;3]
+         r[;3]←⊂''
+         r[;5]←(⊃¨2⊃¨⎕VFI¨r[;5])-60000                ⍝ Numeric start number minus 60,000
+         r[;6]←'KH'['FM'⍳⊃¨r[;6]],¨(¯1+r[;7]⍳¨'-')↑¨r[;7]
+         r[;7]←⊂''
+     :Else
+         r←(~(r[;5]∊⊂'')∨(8↑¨r[;2])∊⊂'Vega Dag')⌿r
+         r[;5]←(⊃¨2⊃¨⎕VFI¨r[;5])-60000                ⍝ Numeric start number minus 60,000
+         r[;6]←('MK '['MF'⍳⊃¨r[;7]]),¨(2↑¨r[;6])~¨'n' ⍝ Turn class names into M/K followed by U, 18, 30 ... 70
+     :EndIf
+     :If ∨/m←~r[;6]∊∪Ryttere[;4]                  ⍝ Known class?
+         (⍕+/m),' ryttere med ukendt kategori...'
+         ∘∘∘
+         r←(~m)⌿r                                 ⍝ We can continue with these
+     :EndIf
+
+     :If ∨/m←~r[;5]∊Ryttere[;1]
+         ⎕←'Ignoring riders not in the database:'
+         ⎕←m⌿r
+         r←(~m)⌿r
+     :EndIf
+
+     z←r[;2 5 6],Ryttere[Ryttere[;1]⍳r[;5];4]
+     :If 0≠≢z←(z[;4]≢¨z[;3])⌿z
+         ⎕←'Incorrect categories'
+         ⎕←'Name' 'Nr'('Afd',⍕i)'RytterDB'⍪z
+     :EndIf
+     (i⊃pages)←hdr⍪r[⍋r[;1];]
+ :EndFor

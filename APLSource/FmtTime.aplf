@@ -1,0 +1,5 @@
+ r←FmtTime t
+⍝ Format times as mm:ss
+
+ r←⌊t ⋄ t←60×t-r ⍝ Hours and Minutes
+ r←↓((⍴t),7)⍴'G<Z99:99 >'⎕FMT t+100×r

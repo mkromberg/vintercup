@@ -1,0 +1,10 @@
+ r←{include}(string DropTo)sub;p
+⍝ Drop from string up to 'sub'.
+
+ sub←,sub
+ :If (⍴string)≤p←¯1+(sub⍷string)⍳1
+     r←''
+ :Else
+     :If 0=⎕NC'include' ⋄ include←0 ⋄ :EndIf
+     r←(p+(~include)×⍴sub)↓string
+ :EndIf

@@ -1,0 +1,29 @@
+ t←MTBCalcAfd A;i;j;r;z;h;col;hk;o;m
+⍝ Calculate data we might need
+
+ t←A⊃Resultater
+
+ col←{(A≤2⊃⍴t)×A←t[1;]⍳⍵}
+ r←Ryttere[;1]⍳1↓t[;t[1;]⍳⊂'Nr']
+
+⍝ :If 0=j←col⊂'Handicap'
+⍝     h←Handicap[A;Ryttere[r;4]]
+⍝     hk←(HandicapKorrektion[;2]≤A)⌿HandicapKorrektion
+⍝     hk←(hk[;3],0)[hk[;1]⍳Ryttere[r;1]]
+⍝     h←h+hk                    ⍝ Adjust Handicap
+⍝     t←t,(⊂'Handicap'),h       ⍝ Handicap for each rider
+⍝     t←t,(⊂'Korrektion'),hk
+⍝ :Else ⋄ h←1↓t[;j] ⋄ :EndIf
+
+⍝ :Select 0≠j←col'Køretid' 'Måltid'
+⍝ :Case 1 0 ⍝ Have Køretid but not Måltid
+⍝     t←t,(⊂'Måltid'),(1↓t[;j[1]])+h
+⍝ :Case 0 1 ⍝ Have Måltid but not Køretid
+⍝     t←t,(⊂'Køretid'),(1↓t[;j[2]])-h
+⍝ :EndSelect
+
+ :If 0=col⊂'Difference'
+     z←1↓t[;col⊂'Måltid']
+     o←(1↓t[;col⊂'Omgange']) ⍝ +7=Ryttere[r;4]
+     t←t,(⊂'Difference'),m\m/z-⌊/(m←o=⌈/o)/z
+ :EndIf

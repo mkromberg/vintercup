@@ -1,0 +1,19 @@
+ r←GetUrl url;⎕USING;reader;sr;rs;rp;wr;host;page
+
+ host←(7×'http://'≡7↑url)↓url
+ host←(¯1+host⍳'/')↑host
+ page←(7+⍴host)↓url
+ r←host GetPage page
+ :If 0=1⊃r ⋄ r←2⊃r ⋄ 'Page ',url,' loaded successfully'
+ :Else ⋄ r←'' ⋄ 'Page ',url,' failed'
+ :EndIf
+ →0
+
+ ⍝ DotNet solution, has translation issues:
+ ⎕USING←'System,system.dll' 'System.Net' 'System.IO'
+ wr←WebRequest.Create url
+ rp←wr.GetResponse
+ rs←rp.GetResponseStream
+ sr←StreamReader.New rs
+ r←sr.ReadToEnd
+ (rp rs sr).Close ⍝ Be good

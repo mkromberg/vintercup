@@ -1,0 +1,21 @@
+ r←GetPages;i;m;file
+
+ r←(⍴Afdelinger)⍴⊂''
+ m←(⍴r)⍴1
+
+ :For i :In ⍳⍴Afdelinger
+     :Trap 0
+         (i⊃r)←⊃⎕NGET(file←InputFolder,'\afd',(⍕i),'.htm')0
+     :Else
+         :Trap 0
+             (i⊃r)←⊃⎕NGET(file←InputFolder,'\afd',(⍕i),'.csv')0
+         :Else
+             m[i]←0
+         :EndTrap
+     :EndTrap
+     :If ⎕NEXISTS file
+         ⎕←(1+≢InputFolder)↓file,', dated ',,'ZI2,</>,ZI2,< >,ZI2,<:>,ZI2'⎕FMT 1 4⍴(⊃3 ⎕NINFO file)[2 3 4 5]
+     :EndIf
+ :EndFor
+
+ r←m/r

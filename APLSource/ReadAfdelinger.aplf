@@ -1,0 +1,28 @@
+ r←ReadAfdelinger;z;page;i;s;cont;r;afd;pages;date;arr
+⍝ Create the "afdelinger" variable
+
+ page←'http://www.vintercuppen.dk/afdelinger/'
+ z←HttpCommand.Get page
+ :If 0≠z.rc
+     ∘∘∘ ⍝ Ups!
+ :Else
+     :If 1≠≢i←¯1+⍸'<div class="entry-content">'⍷z.Data
+         ('format has changed in ',page)⎕SIGNAL 11
+     :Else
+         s←5+1↑⍸'</div>'⍷i↓z.Data
+         cont←⎕XML s↑i↓z.Data
+         afd←⍸(8↑¨3↓¨cont[;3])∊⊂'afdeling'
+         date←6↓¨cont[⍸(6↑¨cont[;3])∊⊂'Dato: ';3]
+         date←↑3↑¨2⊃¨'.'⎕VFI¨date
+         pages←2⊃¨,¨cont[⍸cont[;2]∊⊂,'a';4]
+         arr←10↓¨cont[⍸(9↑¨cont[;3])∊⊂'Arrangør:';3]
+
+         ⍝ Now assemble the bits
+         r←3↑¨cont[afd;3]
+         r←r,¨'<a href="'∘,¨pages,¨'"> den '∘,¨⍕¨date[;1]
+         r←r,¨'. '∘,¨'__da__mmmm'(1200⌶)1 ⎕DT↓(⌽date)(,⍤1)4⍴1
+         r←r,¨'</a> ('∘,¨arr,¨')'
+
+         r←r(⌽1⌷date)
+     :EndIf
+ :EndIf

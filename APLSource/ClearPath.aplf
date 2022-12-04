@@ -1,0 +1,31 @@
+ ok←ClearPath tgt;cde;r;z;fso
+⍝ Prepare a target path to receive a backup (make sure it exists and is empty)
+⍝ Return 1 if this was possible, else 0
+
+ 'fso'⎕WC'OLEClient' 'Scripting.FileSystemObject' ⍝ Utilities available
+ ok←0
+ z←0.5
+ :While 1=fso.FolderExists tgt
+     :Trap 0
+         fso.DeleteFolder(-'\'=¯1↑tgt)↓tgt
+     :Else
+         ⎕DL z←z×2
+         ⎕←'Could not delete folder: ',tgt
+     :EndTrap
+ :EndWhile
+
+ :If 1=fso.FolderExists tgt
+     :Return
+ :EndIf
+
+ 'cde'⎕NA'I shell32∣SHCreateDirectoryExW I4 <0T I4'
+ z←0.5
+ :While 0=fso.FolderExists tgt
+     ok←0=cde 0 tgt 0
+     :If ok=0
+         ⎕←'Could not create folder: ',tgt
+         ⎕DL z←z×2
+     :EndIf
+ :Until 0
+ ⎕←'Cleared folder: ',tgt
+⍝∘ (c)APLIT S BAK stf 08/08/2001 15:33                 6243 D95

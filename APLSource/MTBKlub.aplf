@@ -1,0 +1,31 @@
+ ind MTBKlub A;TN;z;a;n;t;j;i;k;rank;p;q;z;m;klassevis;hdr;o;min
+ ⍝ Formater detaljer for alle ryttere fra en klub
+
+ TN←(EventTitle,z←A⊃Klubber[;1],⊂'Gæster')MTBNewPage'klub',(A⊃KlubSider),'.htm'
+
+ wr'<h2>',EventTitle,' - Klub ',z,' - ',(A⊃Klubber[;3],⊂''),'</h2>'
+
+ i←(Ryttere[;3]∊⊂z)/⍳⊃⍴Ryttere
+ i←i[⍋Individuelt[i;1]] ⍝ In descending order
+
+
+ :If A=1+≢Klubber ⋄ m←~ind[;4]∊Klubber[;1] ⍝ Gæster
+ :Else ⋄ m←ind[;4]∊⊂z                      ⍝ En klub
+ :EndIf
+
+ j←m⌿ind
+
+ k←Klassevis[i←Ryttere[;1]⍳,1↓⍎'0 ',⍕j[;2];]
+
+ :If 3≤⍴Resultater ⍝ Put parens around worst score if at least 3 results
+     min←{(↓⍵)⍳¨⌈/⍵}0 1↓k ⍝ Location of highest score
+     k[i]←{'(',(⍕⍵),')'}¨k[i←(⍳⊃⍴k),¨min+1] ⍝ Format in parens
+ :EndIf
+
+ a←⍕¨⍳⍴Resultater ⍝ Afdelinger
+ a←{'<a href="',FilePrefix,'afd',⍵,'.htm#Individuelt">Afd.<br>',⍵,'</a>'}¨a
+ wr'<p>'
+ hdr←'<br>StartNr' '<br>Navn' '<br>Klub' '<br>Klasse',a,'<br>I alt' 'Klasse<br>Ranking',a,⊂'<br>I alt'
+ m←~(⍳2⊃⍴j)∊1 6 7
+ wr'CENTER'HTMLTable(⍕¨j[;1])hdr(⍕¨(m/j),({'<b>',⍵,'</b>'}¨j[;6]),1⌽k)
+ wr'</p>'

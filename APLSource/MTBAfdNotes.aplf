@@ -1,0 +1,9 @@
+ MTBAfdNotes A;z
+⍝ Write special notes
+
+ :Select A
+ ⍝ :Case 5
+ ⍝    wr'<p><b><font color=red>På grund af de ekstreme forhold ved 5. afdeling, er alle der stillede til start optaget på resultatlisten.<br>'
+ ⍝    wr'Tidsdifferencer og handicap er kun beregnet for de ryttere, der fuldførte alle omgange (3 for herrer, 2 for damer).<br>'
+ ⍝    wr'Alle andre ryttere er indsat i resultatlisten ud fra antallet af omgange samt tiden ved sidste passering.</font></b><br><br>'
+ :EndSelect

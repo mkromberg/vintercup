@@ -1,0 +1,4 @@
+ r←MTBKlubber;paren
+⍝ Klubnavne, formatted for display
+ paren←{⍵,(~'('∊⍵)/' (',⍺,')'}
+ r←Klubber[;1]KlubSideLink¨Klubber[;1]paren¨Klubber[;3]

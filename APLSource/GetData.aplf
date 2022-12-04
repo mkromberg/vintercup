@@ -1,0 +1,71 @@
+ GetData;r;n;i;old;a;m;new;k;z;omgange;tid;j;max;nr;bad;c;ix;ai;dc;dcm
+
+ Ryttere←MassageRiders RytterDB
+ Resultater←⍬  ⍝ Nr, Måltid, Omgange
+
+ r←GetPages    ⍝ Read the files
+ r←ProcPages r ⍝ Pre-process the data
+ n←¯1+(0∊¨⍴¨r)⍳1 ⍝ Antal afdelinger med resultater
+
+⍝ --- Collect Rytter-Data ---
+ :For i :In ⍳n
+     a←1 0↓i⊃r
+     a←(a[;2]∨.≠¨' ')⌿a
+     :If ∨/m←(a[;6]∊'FVegadagchip' 'MVegadagchip' 'Glemt Chip'(⊂,' '))∨a[;2]∊'UKENDT'
+         ⎕←m⌿a
+     :EndIf
+     a←(~m)⌿a
+
+     :If ∨/m←(nr←a[;5])<0
+⍝         ∘ ⍝ Dagchip logic for 2011 OK?
+         :If ∨/c←(1↑⍴DagChips)≥ix←(↓DagChips[;1 2])⍳i,¨m/nr
+             'Afd ',(⍕i),' Dagchip korrektion:'
+             a[ai←c/m/⍳⍴m;5]←⍕¨dc←DagChips[c/ix;3]
+             :If 0≠⍴dc←(dcm←dc∊Ryttere[;1])/dc
+                 a[dcm/ai;2 4]←Ryttere[Ryttere[;1]⍳dc;2 3]
+                 a[dcm/ai;6]←KlasseNavne[Ryttere[Ryttere[;1]⍳dc;4]]
+             :EndIf
+             ⎕←a[ai;]
+             (m/m)←~c
+         :EndIf
+         ⎕←'Afd ',(⍕i),' dagchip resultater ignoreret:'
+         m⌿a
+         a←(~m)⌿a
+         nr←a[;5]
+     :EndIf
+
+     :If 0≠⍴j←{⍵/⍳⍴⍵}(a[;6]∧.=¨' ')∨a[;6]∊⊂'Ukendt'
+         'Ukendt klasse: H40 antaget:' ⋄ a[j;1 2 3]
+         a[j;6]←⊂'H40-49'
+     :EndIf
+
+     :If (⊃⍴KlasseNavne)∨.<k←KlasseNavne⍳a[;6]~¨' ' ⋄ ∘ ⋄ :EndIf ⍝ Bad Class Code
+
+     omgange←{⊃2⊃⎕VFI ⍵}¨a[;8]
+     tid←{(⊂⍵)∊'udgået' 'Udgået' 'DNS':0 ⋄ z←⍵ ⋄ ((z=':')/z)←' ' ⋄ (24 60 60⊥¯3↑2⊃⎕VFI z)÷60}¨a[;9]
+
+
+     Resultater←Resultater,⊂'Nr' 'Måltid' 'Omgange'⍪(tid≠0)⌿↑[0.5]nr tid omgange
+
+     a←↑[0.5]nr(dtb∘dmb¨a[;2])(KlubNavn a[;4])k(a[;4])
+
+     ⍝ From 2011 onwards, list of riders is pre-defined
+     ⍝ Logic for picking up rider data from results is now disabled
+
+     old←(m←a[;1]∊Ryttere[;1])⌿a ⍝ Already registered
+     :If 0∊m
+         ⎕←'Ukendt rytter i afd ',(⍕i),':'
+         ⎕←(~m)⌿a
+         ∘
+     :EndIf ⍝ All riders must be registered
+     ⍝:If (z←Ryttere[Ryttere[;1]⍳old[;1];])≢old
+     ⍝    'Changed at Afdeling ',(⍕i),': '
+     ⍝    'Old' 'New',[0.5]{⍵[;1 2 3],Klasser[⍵[;4];1]}¨(⊂(↓z)≢¨↓old)⌿¨z old
+     ⍝    Ryttere[Ryttere[;1]⍳old[;1];]←old ⍝ Overwrite with new data
+     ⍝:EndIf
+
+     ⍝Ryttere←Ryttere⍪(~m)⌿a
+
+ :EndFor
+
+ Ryttere←Ryttere[⍋Ryttere[;1];]

@@ -1,0 +1,18 @@
+ MTBOversigt;TN;i;k;z;p;a;A;n
+⍝ Rules and regulations
+
+ TN←(EventTitle,' Oversigt')MTBNewPage'oversigt.htm'
+ wr'<h1>',EventTitle,' - Oversigt</h1>'
+ i←⌽('&'=⊃¨z)/⍳⍴z←Oversigt ⍝ Where to insert point system table and class table
+
+⍝ ⍝ --- Points ---
+⍝ p←{(⍕⊃⍵),'. plads = ',(⍕2⊃⍵),'p.'}¨⍉4 5⍴(⍳20),¨Points,5 5 5
+⍝ p[3 4 5;4]←'Alle andre der' 'gennemfører' 'får 5p.'
+⍝ z[(1⊃i)]←⊂'CENTER'HTMLTable'' ''p
+
+ ⍝ --- Klasser ---
+ k←⍕¨(⍳⊃⍴Klasser),Klasser,Handicap[1;]
+ z[(1⊃i)]←⊂'CENTER'HTMLTable(k[;1])('<br>Klasse' '<br>Ryttere' 'Handicap<br>(minutter)')(0 1↓k)
+
+ wr⊃,/z,¨CR
+ ⎕NUNTIE TN

@@ -1,0 +1,34 @@
+ ind MTBKlassevis r;TN;j;k;i;a;g;antal;last;min
+ ⍝ Formater detaljer klassevis
+
+ TN←(EventTitle,' Klassevis')MTBNewPage'klasser.htm'
+ wr'<h2>',EventTitle,' - Klasseinddelte Resultater</h1>'
+ wr'<p>Klik <a href="',EventRules,'""><b>her</b></a> for en oversigt over vintercuppen; afdelingerne, points-system m.m.<br>'
+
+ :For k :In ⍳≢KlasseNavne ⍝ Damer først
+
+     wr'<a name="Klasse',(k⊃KlasseNavne),'"></a>' ⍝ Allow link to here
+     wr'<h2>Klasse ',(k⊃KlasseNavne),'</h2>'
+
+     :If 0=⍴i←(Ryttere[;4]∊KlasseNavne[k])/⍳⊃⍴Ryttere
+         wr'<p>Ingen deltagere</p>'
+     :Else
+         i←i[g←⍋Klassevis[i;1]] ⍝ In descending order
+         antal←(0 1↓Klassevis[i;])+.≠1↓⌈⌿Klassevis
+         last←((⍴Resultater)≠⍴Afdelinger)∨(,Klassevis[i;1+⍴Resultater])<⌈/,Klassevis[;1+⍴Resultater] ⍝ OK ved sidste afdeling
+         j←ind[(⊃¨2⊃¨⎕VFI¨ind[;2])⍳Ryttere[i;1];],1⌽Klassevis[i;]
+         a←⍕¨⍳⍴Resultater ⍝ Afdelinger
+         a←{'<a href="',FilePrefix,'afd',⍵,'.htm#Individuelt">Afd.<br>',⍵,'</a>'}¨a
+         min←{(↓⍵)⍳¨⌈/⍵}0 1↓Klassevis[i;] ⍝ Location of highest score
+         j[i]←{'(',(⍕⍵),')'}¨j[i←(⍳⊃⍴j),¨min+7]
+         j[i;4]←KlubSideLink⍨¨j[i←(j[;4]∊Klubber[;1])/⍳≢j;4]
+
+         ⍝ i←(~last)/⍳⍴antal
+         ⍝ j[i;2]←{'<font color="#FF0000"><b>',(⍕⍵),'</b></font>'}¨j[i;2]
+
+         wr'<p>'
+         wr'CENTER'HTMLTable(⍕¨{⍵⍳⍵},j[;2⊃⍴j])('<br>StartNr' '<br>Navn' '<br>Klub',a,⊂'Points<br>i alt')(⍕¨j[;2 3 4,7↓⍳2⊃⍴j])
+         wr'</p>'
+     :EndIf
+
+ :EndFor

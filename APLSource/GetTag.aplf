@@ -1,0 +1,8 @@
+ r←tag GetTag txt;p;z
+⍝ Extract first occurrence of tag, return remaining text
+
+ r←txt TakeTo z←'</',tag,'>'
+ txt←((⍴r)+⍴z)↓txt
+ r←(r DropTo'<',tag)DropTo'>'
+
+ r←r txt

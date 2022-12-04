@@ -1,0 +1,62 @@
+ R←MTBAfdeling A;TN;a;n;r;t;j;i;k;m;g;z;efter;max;p;klubber
+ TN←(EventTitle,' Afd. ',⍕A)MTBNewPage'afd',(⍕A),'.htm'
+ wr'<h2>',EventTitle,' - Afdeling ',(⍕A),'</h2>'
+ wr'<p>Klik <a href="',EventRules,'"><b>her</b></a> for en oversigt over vintercuppen; afdelingerne, points-system m.m.<br>'
+
+ z←'<A HREF="https://runraces.bbtiming.com/ "><b>Runraces</b></A>'
+ wr'<p>Se detaljerede resultater hos ',z,'.</p>'
+
+ MTBAfdNotes A
+
+⍝ ------- Individuelle Stilling ------
+ wr'<a name="Individuelt"></a><h2>Individuel konkurrence</h2>'
+ t←MTBCalcAfd A
+ z←1 0↓t[;t[1;]⍳'Nr' 'Måltid' 'Difference' 'Omgange']
+ z←z,⍉↑2⍴⊂⍳1↑⍴z ⍝ Rank
+ r←Ryttere[;1]⍳z[;1]
+ z←0 1↓z ⍝ Drop number
+
+ z←MTBRyttere[r;⍳4],z
+
+ :For k :In ∪z[;4] ⍝ Per class
+     z[j;9]←⍋⍋z[j←(z[;4]∊⊂k)/⍳⊃⍴z;9] ⍝ Class Rank
+ :EndFor
+
+ klubber←z[;3]
+
+ z[i;3]←KlubSideLink⍨¨z[i←(z[;3]∊Klubber[;1])/⍳≢z;3]
+ z[;4]←{'<a href="',FilePrefix,'klasser.htm#Klasse',(⍕⍵),'">',⍵,'</a>'}¨z[;4]
+ z[;5]←FmtTime z[;5]
+ z[;6]←FmtTime z[;6]
+ m←1↓z[;7]=max←⌈/z[;7]
+ z[j;6]←m\m/(⊂'+'),¨z[j←1↓⍳⊃⍴z;6]
+ z[(~m)/j;6]←(⊂'+'),¨(⍕¨max-z[(~m)/j;7]),¨⊂' omg'
+ z[1;6]←⊂''
+ z←z[;1 2 3 4 9 8 5 6]
+
+ R←z←⍕¨z
+ wr'<p>'
+ wr'CENTER'HTMLTable(⍕¨⍳⊃⍴z)('<br>Nr' '<br>Navn' '<br>Klub' '<br>Klasse' 'Klasse<br>Ranking' '<br>Point' '<br>Tid' '<br>Diff.')R
+ wr'</p>'
+
+⍝ --------- Klub-konkurrencen --------
+
+ wr'<a name="Klubvis"></a><h2>Klub-konkurrence</h2>'
+ k←(m←~Klubber[;1]∊⊂'Gæster')⌿Klubber[;1],Klubvis[;,1+⊃A]
+ k←k[g←⍋k[;2];]
+ g←(m/+\m)[g]
+
+ :For i :In ⍳⊃⍴k
+     wr'<h3>',(⍕⊃i),'. plads og ',(⍕⊃k[i;2]),' point til ',(⊃k[i;1]),'</h3>'
+     t←z[(klubber∊k[i;1])/⍳⊃⍴z;1 2 4 5]
+     t←t[⍋2⊃⎕VFI⍕t[;4];]
+     t←(5⌊1↑⍴t)↑[1]t
+     j←t⍪⊂''
+     p←(5>1↑⍴t)/'(+ ',(⍕5-1↑⍴t),' x ',(⍕2++/klubber∊Klubber[;1]),') = '
+     j[⊃⍴j;2 4]←(⊂'<b>'),¨((p,'i alt')(⍕k[i;2])),¨⊂'</b>' ⋄ j←⍕¨j
+     wr'<p>'
+     wr'CENTER'HTMLTable(j[;1])('Navn' 'Klasse' 'Plac.')(0 1↓j)
+     wr'</p>'
+ :EndFor
+
+ ⎕NUNTIE TN

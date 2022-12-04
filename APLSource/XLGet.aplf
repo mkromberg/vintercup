@@ -1,0 +1,8 @@
+ z←XLGet;XL;BOOK;SHEET;RANGE
+⍝ Get current Excel Sheet Contents
+
+ 'XL'⎕WC'OLEClient' 'Excel.Application'('AutoBrowse' 0)
+ 'BOOK'⎕WC'XL'⎕WG'ActiveWorkBook'
+ 'SHEET'⎕WC'BOOK'⎕WG'ActiveSheet'
+ 'RANGE'⎕WC'SHEET'⎕WG'UsedRange'
+ z←'RANGE'⎕WG'Value2'

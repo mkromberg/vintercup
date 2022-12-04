@@ -1,0 +1,31 @@
+ MTBCopy;files;f;d1;prefix;FileHead;FileTail;style;NL;z;wspath;enc;nl
+⍝ Copy content of FilePath into Frontpage files in WebPath
+
+ files←'main' 'klasser' ⍝ 'oversigt'
+ files,←(⊂'klub'),¨KlubSider
+ files,←(⊂'afd'),¨⍕¨⍳⍴Resultater
+
+⍝ z←Files.ReadAllText'c:\mtbcup\2010\template.htm'
+⍝ FileHead←(¯1+('<!-- START VC'⍷z)⍳1)↑z
+⍝ FileTail←(¯1+('<!-- END VC'⍷z)⍳1)↓z
+⍝ FileTail←(1+FileTail⍳⎕UCS 13)↓FileTail
+ style←⊃,/Style,¨⊂NL←⎕UCS 13 10
+
+ FileHead←HTMLHead
+ FileTail←'</body>'
+ prefix←FilePrefix
+
+ (FilePath,prefix)FTPUpload prefix
+ →0
+
+ 'Copying files from ',FilePath,prefix,'*'
+ '             ]open ',WebPath,prefix
+
+ :For f :In files
+     (d1 enc nl)←3↑⎕NGET(FilePath,prefix,f,'.htm')0
+     d1←style,NL,'<div id="VCSTYLE">',NL,d1,NL,'</div>',NL
+     (⊂FileHead,d1,FileTail)⎕NPUT(WebPath,prefix,f,'.htm')1
+ :EndFor
+
+ wspath←{(1-(⌽⍵)⍳'\')↓⍵}⎕WSID
+ (GetFile wspath,'logo.jpg')PutFile WebPath,'\logo.jpg'

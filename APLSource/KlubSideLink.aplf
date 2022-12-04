@@ -1,0 +1,1 @@
+ KlubSideLink←{'<a href="',FilePrefix,'klub',⍺,'.htm">',⍵,'</a>'}

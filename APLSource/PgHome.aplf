@@ -1,0 +1,37 @@
+ HTML←PgHome PARS;srv;svc;i;j;s;z;pics
+⍝ Return Home Page
+
+ HTML←'<font face=Arial,Helvetica>'
+ srv←#.MASTER.SERVERS
+ srv[;1]←⍕¨srv[;1]
+ srv[;2]←(⊂'<a href="SRM.RUN?Page=Server&Server='),¨srv[;2],¨(⊂'">'),¨srv[;2],¨⊂'</a>'
+ ⍝ srv[;3]←('Down' 'Up' 'Starting' '?unknown')[0 1 2⍳srv[;3]]
+ srv[;4]←tsfmt¨srv[;4]
+
+⍝ Service Status
+ svc←#.MASTER.SERVICES
+ ⍝ svc[;1]←(srv[;2],⊂'?Unknown')[srv[;1]⍳⍕¨svc[;1]]
+ svc[;2]←(⊂'<a href="SRM.RUN?Page=Service&Service='),¨svc[;2],¨(⊂'">'),¨svc[;2],¨⊂'</a>'
+ ⍝ svc[;3]←('Down' 'Up' 'Starting' '?unknown')[0 1 2⍳svc[;3]]
+ svc[;4]←tsfmt¨svc[;4]
+
+ HTML,←'<font size=2><b>Status for "'
+ HTML,←(2⊃#.SRV.System),'" on Machine ',#.SRV.Master,'</b><br>'
+ HTML,←'System is running ',(⍕⊃⍴srv),' servers supporting a total of ',(⍕⊃⍴svc),' services.<br>'
+ HTML,←'Current number of users is ',(⍕0+.≠⊃∘⍴¨#.MASTER.TASKS[;4]),'.</font><br><br>'
+
+ pics←'flash50.gif' 'bluetick50.gif' 'warning50.gif' ⍝ Down, Up, Starting/Error
+
+ :For i :In ⍳⊃⍴srv
+     HTML,←'<font size=2><b>',(z≠2)/'<img border=0 src="',((3⌊z←srv[i;3]+1)⊃pics),'"> '
+     HTML,←(s←⊃#.MASTER.SERVERS[i;2]),': ',(⊃srv[i;5]),' <font size=1>(',(⊃srv[i;4]),') </font></b>'
+     :If z≠2 ⋄ HTML,←'<a href="SRM.RUN?page=Commands&Command=StartServer&Server=',s,'"><b>RESTART</b></a>' ⋄ :EndIf
+     HTML,←'<br>'
+     :For j :In (svc[;1]=i-1)/⍳⊃⍴svc ⍝ Services in this Server
+         HTML,←'&nbsp&nbsp&nbsp',(z≠2)/'<img border=0 src="',((3⌊z←svc[j;3]+1)⊃pics),'"> '
+         HTML,←(⊃svc[j;2]),' ',(⊃svc[j;5]),' <font size=1>(',(⊃svc[j;4]),')</font><br>'
+     :EndFor
+     HTML,←'<br>'
+ :EndFor
+ HTML,←'</font>'
+⍝∘ (c)APLIT S SRM mjk 19/09/2000 16:15                28830 D95

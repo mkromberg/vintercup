@@ -1,0 +1,5 @@
+ r←GetFile name;tn
+⍝ Return contents of a file
+ tn←name ⎕NTIE 0
+ r←⎕NREAD tn,80,⎕NSIZE tn
+ ⎕NUNTIE tn
