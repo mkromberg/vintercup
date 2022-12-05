@@ -1,2 +1,3 @@
  Run
- ⎕←'      RytterDB←LoadXL ''c:\devt\mtbcup\2022\Ryttere.xls'' ''Deltagere'''
+ ⎕←⍎⎕←'      ≢RytterDB←LoadXL ''c:\devt\mtbcup\2022\Ryttere.xls'' ''Deltagere'''
+ ⎕←'Now run:' ⋄ '' ⋄ '      MTB'

@@ -1,12 +1,15 @@
  Ryttere←MassageRiders RytterDB;i;klasser;m;køn
 ⍝ Return StartNo, Name, Club, Class, Full Club Name
 
- :If ∧/(¯1↑⍴RytterDB)≥i←RytterDB[1;]⍳'Startnr' 'Navn' 'Klub/Team/Firma' 'Klasse' 'Klub/Team/Firma'
+⍝ :If ∧/(¯1↑⍴RytterDB)≥i←RytterDB[1;]⍳'Startnr' 'Navn' 'Klub/Team/Firma' 'Klasse' 'Klub/Team/Firma'
+ :If ∧/(¯1↑⍴RytterDB)≥i←RytterDB[1;]⍳'Startnr.' 'Fornavn' 'Efternavn' 'Køn' 'Klub/Firma' 'Aldersklasse'
      Ryttere←1↓RytterDB[;i]
-     m←'F'=⊃¨klasser←{(¯1+(⍵⍳¨'-')⌊⍵⍳¨'n')↑¨⍵}Ryttere[;4]~¨' '
+     Ryttere[;2]←Ryttere[;2],¨' ',¨Ryttere[;3]
+     Ryttere[;6]←'KH'['FM'⍳⊃¨Ryttere[;4]],¨{(¯1+⍵⍳'-')↑⍵}¨Ryttere[;6]
+     Ryttere←(~3 4∊⍨⍳6)/Ryttere
+
      Ryttere[;1]←Ryttere[;1]-60000
      Ryttere[;3]←KlubNavn Ryttere[;3]
-     Ryttere[;4]←(m/¨'K'),¨m↓¨klasser
 
  :Else ⍝ Old format (we hope)
      Ryttere←1↓RytterDB[;RytterDB[1;]⍳'Chip code' 'First name' 'Last name' 'Club/Company' 'Class']

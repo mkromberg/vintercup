@@ -17,7 +17,7 @@
  →(ClearPath FilePath)↓0
 
  wr←{⍵ ⎕NAPPEND TN}
- CR←⎕AV[4]
+ CR←⎕UCS 13
  NL←⎕UCS 13 10
 
  i←MTBMain                   ⍝ Main page

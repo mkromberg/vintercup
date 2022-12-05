@@ -1,8 +1,9 @@
- r←host GetPage page;QRY;msg;SOCK;P;BUFFER
+ r←host GetPage page;QRY;msg;SOCK;P;BUFFER;CRLF
 ⍝ Get a page from a host
 
+ CRLF←⎕UVS 13 10
  QRY←'GET ',page,' HTTP/1.1'
- QRY,←⎕AV[4 3],'Host: ',host,⎕AV[4 3 4 3]
+ QRY,←CRLF,'Host: ',host,CRLF,CRLF
 
  P←('RemoteAddrName'host)('RemotePort' 80)('Event'('TCPConnect' 'TCPRecv' 'TCPClose' 'TCPError')1)
  'SOCK'⎕WC(⊂'TCPSocket'),P

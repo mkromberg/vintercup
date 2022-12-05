@@ -68,7 +68,7 @@
 
      :If ∨/m←~r[;5]∊Ryttere[;1]
          ⎕←'Ignoring riders not in the database:'
-         ⎕←m⌿r
+         ⎕←60000+@((⍳+/m),¨5)⊢m⌿r
          r←(~m)⌿r
      :EndIf
 

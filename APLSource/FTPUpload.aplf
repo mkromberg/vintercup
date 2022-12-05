@@ -3,7 +3,11 @@
  :If 0=≢pass←2 ⎕NQ '.' 'GetEnvironment' 'VC_FTP_PASS'
      'VC_FTP_PASS not found in environment' ⎕SIGNAL 11
  :EndIf
- 
+
+ :If 0=⎕NC '#.DRC'
+     'DRC' #.⎕CY 'conga'
+ :EndIf
+
  to←(0=≢to)/'vc2022/'
  ⎕←'Login to ftp.mortens.one'
  c←⎕NEW FtpClient('ftp.mortens.one' 'mortens.one' pass)
