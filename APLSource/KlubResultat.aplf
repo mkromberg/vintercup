@@ -1,0 +1,12 @@
+KlubResultat;a;z
+⍝ --------- Klub-konkurrencen --------
+ wr'<h2>Klub-konkurrencen</h2>'
+ wr'<p>Klik på overskrifterne over afdelings-kolonnerne for at se detaljerede resultater for hver enkelt afdeling.<br>'
+ wr'Klik på et klubnavn for at se en oversigt over resultaterne for rytterne fra hver enkelt klub.</p>'
+ z←~Klubber[;1]∊⊂'Gæster'
+ z←(z⌿MTBKlubber,Klubvis)[⍋z/Klubvis[;1];]
+ a←⍕¨⍳¯1+2⊃⍴Klubvis ⍝ Afdelinger
+ a←{'<a href="',FilePrefix,'afd',⍵,'.htm#Klubvis">Afd.<br>',⍵,'</a>'}¨a
+ wr'<p>'
+ wr'CENTER'HTMLTable''('' '<br>Klub' 'Points<br>i alt',a)(((⍕¨z[;2]⍳z[;2]),¨'.'),⍕¨z)
+ wr'</p>'

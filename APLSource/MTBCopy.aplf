@@ -1,7 +1,7 @@
  MTBCopy;files;f;d1;prefix;FileHead;FileTail;style;NL;z;wspath;enc;nl
 ⍝ Copy content of FilePath into Frontpage files in WebPath
 
- files←'main' 'klasser' ⍝ 'oversigt'
+ files←'main' 'klasser' 'slutstilling'
  files,←(⊂'klub'),¨KlubSider
  files,←(⊂'afd'),¨⍕¨⍳⍴Resultater
 

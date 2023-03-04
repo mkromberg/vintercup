@@ -14,17 +14,7 @@
 
  :If A≠⍴Afdelinger ⋄ wr'<p><b>Husk afdeling ',((A+1)⊃Afdelinger),'!</b></p>' ⋄ :EndIf
 
-⍝ --------- Klub-konkurrencen --------
- wr'<h2>Klub-konkurrencen</h2>'
- wr'<p>Klik på overskrifterne over afdelings-kolonnerne for at se detaljerede resultater for hver enkelt afdeling.<br>'
- wr'Klik på et klubnavn for at se en oversigt over resultaterne for rytterne fra hver enkelt klub.</p>'
- z←~Klubber[;1]∊⊂'Gæster'
- z←(z⌿MTBKlubber,Klubvis)[⍋z/Klubvis[;1];]
- a←⍕¨⍳A ⍝ Afdelinger
- a←{'<a href="',FilePrefix,'afd',⍵,'.htm#Klubvis">Afd.<br>',⍵,'</a>'}¨a
- wr'<p>'
- wr'CENTER'HTMLTable''('' '<br>Klub' 'Points<br>i alt',a)(((⍕¨z[;2]⍳z[;2]),¨'.'),⍕¨z)
- wr'</p>'
+KlubResultat
 
 ⍝ ------- Individuelle Stilling ------
  wr'<h2>Individuel stilling</h2>'
@@ -94,6 +84,7 @@
  :EndFor
 
  wr'<p>'
- wr'LEFT'HTMLTable(⍕¨n)(m/'<br>StartNr' '<br>Navn' '<br>Klub' '<br>Klasse' 'Klasse<br>Ranking'('Points for<br>',(⍕(3⌊⍴Resultater)⌈¯1+⍴Resultater),' af ',(⍕⍴Resultater),' afd.'),a,⊂'Points<br>i alt')(m/qq)
+ IndividueltResultat←(⍕¨n)(m/'<br>StartNr' '<br>Navn' '<br>Klub' '<br>Klasse' 'Klasse<br>Ranking'('Points for<br>',(⍕(3⌊⍴Resultater)⌈¯1+⍴Resultater),' af ',(⍕⍴Resultater),' afd.'),a,⊂'Points<br>i alt')(m/qq)
+ wr'LEFT'HTMLTable IndividueltResultat ⍝ Global used by MTBKlassevis to write final results
  wr'</p>'
  ⎕NUNTIE TN

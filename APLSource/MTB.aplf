@@ -25,7 +25,8 @@
  r←MTBAfdeling¨⍳⍴Resultater  ⍝ Results of each race
  i∘MTBKlub¨⍳1+≢Klubber     ⍝ Individual results, by club
 
- ((-1+⍴Resultater)↓[2]i)MTBKlassevis r ⍝ By Class
+ MTBKlassevis r ((-1+⍴Resultater)↓[2]i) 0 ⍝ By Class
+ MTBKlassevis r ((-1+⍴Resultater)↓[2]i) 3 ⍝ Slutstilling
 
  ⎕←3 1⍴'Now run' '' '      MTBCopy'
  ⎕NUNTIE ⎕NNUMS

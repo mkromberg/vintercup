@@ -1,12 +1,26 @@
- ind MTBKlassevis r;TN;j;k;i;a;g;antal;last;min
- ⍝ Formater detaljer klassevis
+ MTBKlassevis(r ind top);TN;j;k;i;a;g;antal;last;min;final;z;t;title
+ ⍝ Formater detaljer klassevis - eller lav oversigt til præmieuddeling
+ ⍝ r is processed input
+ ⍝ ind is raw input
+ ⍝ top limits output in each class
 
- TN←(EventTitle,' Klassevis')MTBNewPage'klasser.htm'
- wr'<h2>',EventTitle,' - Klasseinddelte Resultater</h1>'
+ final←top≠0
+ TN←(EventTitle,⊃final↓' Klassevis' ' Slutstilling')MTBNewPage⊃final↓'klasser.htm' 'slutstilling.htm'
+ title←⊃final↓'Klasseinddelte Resultater' 'Oversigt til Præmieuddeling'
+ wr'<h2>',EventTitle,' - ',title,'</h1>'
+
+ :If final
+    KlubResultat
+    wr'<h2>Individuelt</h2>'
+    wr'<p>'
+    wr'LEFT'HTMLTable 5↑¨@1 3⊢IndividueltResultat ⍝ Global created by MTBMain
+    wr'</p>'
+ :EndIf
+
  wr'<p>Klik <a href="',EventRules,'""><b>her</b></a> for en oversigt over vintercuppen; afdelingerne, points-system m.m.<br>'
 
  :For k :In ⍳≢KlasseNavne ⍝ Damer først
-
+     t←top
      wr'<a name="Klasse',(k⊃KlasseNavne),'"></a>' ⍝ Allow link to here
      wr'<h2>Klasse ',(k⊃KlasseNavne),'</h2>'
 
@@ -14,8 +28,6 @@
          wr'<p>Ingen deltagere</p>'
      :Else
          i←i[g←⍋Klassevis[i;1]] ⍝ In descending order
-         antal←(0 1↓Klassevis[i;])+.≠1↓⌈⌿Klassevis
-         last←((⍴Resultater)≠⍴Afdelinger)∨(,Klassevis[i;1+⍴Resultater])<⌈/,Klassevis[;1+⍴Resultater] ⍝ OK ved sidste afdeling
          j←ind[(⊃¨2⊃¨⎕VFI¨ind[;2])⍳Ryttere[i;1];],1⌽Klassevis[i;]
          a←⍕¨⍳⍴Resultater ⍝ Afdelinger
          a←{'<a href="',FilePrefix,'afd',⍵,'.htm#Individuelt">Afd.<br>',⍵,'</a>'}¨a
@@ -23,11 +35,16 @@
          j[i]←{'(',(⍕⍵),')'}¨j[i←(⍳⊃⍴j),¨min+7]
          j[i;4]←KlubSideLink⍨¨j[i←(j[;4]∊Klubber[;1])/⍳≢j;4]
 
-         ⍝ i←(~last)/⍳⍴antal
-         ⍝ j[i;2]←{'<font color="#FF0000"><b>',(⍕⍵),'</b></font>'}¨j[i;2]
+         :If final∨(≢Afdelinger)=≢Resultater
+         :AndIf 0≠≢i←⍸~(2⊃⎕VFI ,⍕j[;2])∊(5⊃Resultater)[;1] ⍝ Did not participate in last afdeling
+             k←2,¯1+2⊃⍴j
+             j[i;k]←{'<font color="red"><b>',(⍕⍵),'</b></font>'}¨j[i;k]
+             t+←(t≠0)×+/i≤t ⍝ Display enough to have "top" winners
+         :EndIf
 
          wr'<p>'
-         wr'CENTER'HTMLTable(⍕¨{⍵⍳⍵},j[;2⊃⍴j])('<br>StartNr' '<br>Navn' '<br>Klub',a,⊂'Points<br>i alt')(⍕¨j[;2 3 4,7↓⍳2⊃⍴j])
+         z←(t⌊≢j)↑⍣(t≠0)⊢(⍕¨j[;2 3 4,7↓⍳2⊃⍴j])
+         wr'CENTER'HTMLTable((≢z)↑⍕¨{⍵⍳⍵},j[;2⊃⍴j])('<br>StartNr' '<br>Navn' '<br>Klub',a,⊂'Points<br>i alt')z
          wr'</p>'
      :EndIf
 
