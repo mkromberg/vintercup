@@ -26,7 +26,7 @@
  i∘MTBKlub¨⍳1+≢Klubber     ⍝ Individual results, by club
 
  MTBKlassevis r ((-1+⍴Resultater)↓[2]i) 0 ⍝ By Class
- MTBKlassevis r ((-1+⍴Resultater)↓[2]i) 3 ⍝ Slutstilling
+⍝ MTBKlassevis r ((-1+⍴Resultater)↓[2]i) 3 ⍝ Slutstilling
 
  ⎕←3 1⍴'Now run' '' '      MTBCopy'
  ⎕NUNTIE ⎕NNUMS

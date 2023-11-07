@@ -1,6 +1,5 @@
  navne←KlubNavn navne;n;i;m;j
 ⍝ Find Club name from entered string
-
  i←(≢¨Klubber[;2])/⍳≢Klubber
  n←⊃,/Klubber[;2]
  m←(j←(⎕C n)⍳⎕C navne)≤⍴n

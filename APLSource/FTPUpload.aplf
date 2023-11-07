@@ -8,7 +8,7 @@
      'DRC' #.⎕CY 'conga'
  :EndIf
 
- to←(0=≢to)/'vc2022/'
+ to←(0=≢to)/'vc2023/'
  ⎕←'Login to ftp.mortens.one'
  c←⎕NEW FtpClient('ftp.mortens.one' 'mortens.one' pass)
 

@@ -1,0 +1,21 @@
+r←GetRiders afd;a;data;hdr;flds;old;m;new
+r←(0,≢flds←'Startnr.' 'Fornavn' 'Efternavn' 'Køn' 'Klub/Firma' 'Aldersklasse')⍴⊂''
+
+:For a :In ⍳≢afd
+    (data hdr)←(⎕CSV⍠'Separator' ';') (a⊃afd) 'S' (2,10⍴1) 1
+    data[;1]←data[;1]+65000×data[;1]<60000
+    :If ~∧/flds∊hdr
+        ∘∘∘ ⍝ Missing fields
+    :EndIf
+    data←data[;hdr⍳flds]
+    new←(~m←data[;1]∊r[;1])⌿data
+    old←m⌿data
+    :If ∨/m←~(↓old)∊↓r
+        'Redefined in adf. ',(⍕a),':'
+        (m⌿old) '→' (r[r[;1]⍳m⌿old[;1];])
+        ∘∘∘
+    :EndIf
+    r⍪←new
+:EndFor
+
+r←flds⍪r

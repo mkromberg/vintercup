@@ -1,9 +1,9 @@
  GetData;r;n;i;old;a;m;new;k;z;omgange;tid;j;max;nr;bad;c;ix;ai;dc;dcm
 
- Ryttere←MassageRiders RytterDB
  Resultater←⍬  ⍝ Nr, Måltid, Omgange
 
  r←GetPages    ⍝ Read the files
+ Ryttere←MassageRiders GetRiders r
  r←ProcPages r ⍝ Pre-process the data
  n←¯1+(0∊¨⍴¨r)⍳1 ⍝ Antal afdelinger med resultater
 
@@ -16,7 +16,8 @@
      :EndIf
      a←(~m)⌿a
 
-     :If ∨/m←(nr←a[;5])<0
+     ⍝ a[;5]←(5000×0>a[;5])+a[;5]
+     :If 0∧∨/m←(nr←a[;5])<0 ⍝ Ingen dagchip
 ⍝         ∘ ⍝ Dagchip logic for 2011 OK?
          :If ∨/c←(1↑⍴DagChips)≥ix←(↓DagChips[;1 2])⍳i,¨m/nr
              'Afd ',(⍕i),' Dagchip korrektion:'
