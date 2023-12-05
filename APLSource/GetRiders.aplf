@@ -1,4 +1,4 @@
-r←GetRiders afd;a;data;hdr;flds;old;m;new
+r←GetRiders afd;a;data;hdr;flds;old;new;compare;m
 r←(0,≢flds←'Startnr.' 'Fornavn' 'Efternavn' 'Køn' 'Klub/Firma' 'Aldersklasse')⍴⊂''
 
 :For a :In ⍳≢afd
@@ -10,10 +10,10 @@ r←(0,≢flds←'Startnr.' 'Fornavn' 'Efternavn' 'Køn' 'Klub/Firma' 'Alderskla
     data←data[;hdr⍳flds]
     new←(~m←data[;1]∊r[;1])⌿data
     old←m⌿data
-    :If ∨/m←~(↓old)∊↓r
+    compare←~flds∊⊂'Klub/Firma'
+    :If ∨/m←~(↓compare/old)∊↓compare/r
         'Redefined in adf. ',(⍕a),':'
-        (m⌿old) '→' (r[r[;1]⍳m⌿old[;1];])
-        ∘∘∘
+        (r[r[;1]⍳m⌿old[;1];]) (⍪m/'→') (m⌿old)
     :EndIf
     r⍪←new
 :EndFor

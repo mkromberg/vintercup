@@ -43,8 +43,7 @@
      :If (⊃⍴KlasseNavne)∨.<k←KlasseNavne⍳a[;6]~¨' ' ⋄ ∘ ⋄ :EndIf ⍝ Bad Class Code
 
      omgange←{⊃2⊃⎕VFI ⍵}¨a[;8]
-     tid←{(⊂⍵)∊'udgået' 'Udgået' 'DNS':0 ⋄ z←⍵ ⋄ ((z=':')/z)←' ' ⋄ (24 60 60⊥¯3↑2⊃⎕VFI z)÷60}¨a[;9]
-
+     tid←{(⊂⍵)∊'udgået' 'Udgået' 'DNS' 'DNF':0 ⋄ z←⍵ ⋄ ((z=':')/z)←' ' ⋄ (24 60 60⊥¯3↑2⊃⎕VFI z)÷60}¨a[;9]
 
      Resultater←Resultater,⊂'Nr' 'Måltid' 'Omgange'⍪(tid≠0)⌿↑[0.5]nr tid omgange
 
