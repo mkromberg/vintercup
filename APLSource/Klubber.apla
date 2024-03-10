@@ -1,8 +1,47 @@
 [
- ('PAF' ('Pedal-Atleterne Fredensborg'⋄) 'Pedal-Atleterne Fredensborg')
- ('FMC' ('FCK' 'Frederiksværk motions cykelklub') 'Frederiksværk Cykelklub')
- ('MISK' ('MISK Skævinge'⋄) 'MISK Skævinge')
- ('VIK' ('CK VIKING'⋄) 'C.K. Viking')
- ('GCM' ('GRIBSKOV CYKEL MOTION'⋄) 'Gribskov Cykel Motion')
- ('THC' ('Hareskov Cykler' 'Team Hareskov Cykler' 'Hareskov Cykel klub') 'Hareskov Cykler')
+ (
+  'PAF'
+  (
+   'Pedal-Atleterne Fredensborg'
+  )
+  'Pedal-Atleterne Fredensborg'
+ )
+ (
+  'FMC'
+  (
+   'FCK'
+   'Frederiksværk motions cykelklub'
+  )
+  'Frederiksværk Cykelklub'
+ )
+ (
+  'MISK'
+  (
+   'MISK Skævinge'
+  )
+  'MISK Skævinge'
+ )
+ (
+  'VIK'
+  (
+   'CK VIKING'
+  )
+  'C.K. Viking'
+ )
+ (
+  'GCM'
+  (
+   'GRIBSKOV CYKEL MOTION'
+  )
+  'Gribskov Cykel Motion'
+ )
+ (
+  'THC'
+  (
+   'Hareskov Cykler'
+   'Team Hareskov Cykler'
+   'Hareskov Cykel klub'
+  )
+  'Hareskov Cykler'
+ )
 ]
