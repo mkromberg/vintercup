@@ -71,7 +71,7 @@ KlubResultat
 
  :If 0∧m←1∨MINIMUM<⍴Resultater
      i←(~last)/⍳⍴antal
-     qq[i;1]←{'<font color="#FF0000"><b>',(⍕⍵),'</b></font>'}¨qq[i;1]
+    ⍝ qq[i;1]←{'<font color="#FF0000"><b>',(⍕⍵),'</b></font>'}¨qq[i;1]
  :Else
      m←6≠⍳¯1↑⍴qq ⍝ Cols to display
  :EndIf

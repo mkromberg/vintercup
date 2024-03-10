@@ -38,7 +38,7 @@
          :If final∨(≢Afdelinger)=≢Resultater
          :AndIf 0≠≢i←⍸~(2⊃⎕VFI ,⍕j[;2])∊(5⊃Resultater)[;1] ⍝ Did not participate in last afdeling
              k←2,¯1+2⊃⍴j
-             j[i;k]←{'<font color="red"><b>',(⍕⍵),'</b></font>'}¨j[i;k]
+            ⍝ j[i;k]←{'<font color="red"><b>',(⍕⍵),'</b></font>'}¨j[i;k]
              t+←(t≠0)×+/i≤t ⍝ Display enough to have "top" winners
          :EndIf
 
